@@ -34,6 +34,16 @@ const userSchema = new Schema({
         required : [true, "Password is required"],
     },
 
+    bio:{
+        type : String,
+        required : [true, "Bio is required"],
+    },
+
+    story:{
+        type : String, //cloudinary url
+        default : undefined,
+    },
+
     posts : [
         {
             type : Schema.Types.ObjectId,
@@ -52,6 +62,20 @@ const userSchema = new Schema({
         {
             type : Schema.Types.ObjectId,
             ref : 'Post',
+        }
+    ],
+
+    followers :[
+        {
+            type : Schema.Types.ObjectId,
+            ref : 'User',
+        }
+    ],
+
+    following :[
+        {
+            type : Schema.Types.ObjectId,
+            ref : 'User',
         }
     ],
 

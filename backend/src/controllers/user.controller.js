@@ -24,8 +24,8 @@ const generateAccessAndRefreshToken = async(userId) =>
 
 const registerUser = asyncHandler(async (req, res) => {
     //taking the details from reuest bodyu
-    const {fullname, email, username, password} = req.body;
-    if([fullname, email, username, password].some((x)=>x?.trim()==="")){
+    const {fullname, email, username, password, bio} = req.body;
+    if([fullname, email, username, password, bio].some((x)=>x?.trim()==="")){
         throw new ApiError(400, "All fields are required.")
     }
 
@@ -50,7 +50,8 @@ const registerUser = asyncHandler(async (req, res) => {
         email,
         username,
         password,
-        avatar:avatar.url
+        avatar:avatar.url,
+        bio
     });
 
     const createdUser = await User.findById(user._id).select(
@@ -180,10 +181,269 @@ const refreshAcessToken = asyncHandler(async(req,res) => {
     }
 });
 
+const changeCurrentPassword = asyncHandler(async(req,res)=>{
+    const {oldpassword,newpassword} = req.body;
+
+    const user = await User.findById(req.user._id)
+    const isPasswordCorrect = await user.isPasswordCorrect(oldpassword)
+
+    if(!isPasswordCorrect) {
+        throw new ApiError(401, "Invalid credentials")
+    }else{
+        user.password = newpassword;
+        await user.save({validateBeforeSave: false})
+
+        return res
+        .status(200)
+        .json(new ApiResponse(200,{},"Password updated successfully"))
+    }
+})
+
+const getCurrentUser = asyncHandler(async(req,res)=>{
+    return res.status(200).json(new ApiResponse(200, req.user,"current user fetched succesfully"))
+})
+
+const updateAccountDetails = asyncHandler(async(req,res)=>{
+    const {fullname, email} = req.body
+    
+    if(!fullname || !email) {
+     throw new ApiError(400, "All fields are required")
+    }
+    
+    const user = await User.findByIdAndUpdate(
+     req.user._id,
+     {
+         $set:{
+             fullname,
+             email
+         }
+     },
+     {new: true}
+    ).select("-password")
+ 
+    return res
+    .status(200)
+    .json(new ApiResponse(200,user, "AccountDetails updated succesfully"))
+})
+
+const updateUserAvatar = asyncHandler(async(req,res)=>{
+    const avatarLocalPath = req.file?.path
+
+    if(!avatarLocalPath){
+        throw new ApiError(400, "Avatr file is missing")
+    }
+
+    const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+    if(!avatar.url){
+        throw new ApiError(400, "Avatar upload failed")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                avatar: avatar.url
+            }
+        },
+        {new: true}
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "Avatar updated succesfully")
+    )
+})
+
+const updateBio = asyncHandler(async(req,res)=>{
+    const {bio} = req.body
+    
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                bio
+            }
+        },
+        {new: true}
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "Bio updated succesfully")
+    )
+})
+
+const addStory = asyncHandler(async(req,res)=>{
+    const storylocalpath = req.file?.path
+    // console.log(req.file)
+    if(!storylocalpath){
+        throw new ApiError(400, "Story file is missing")
+    }
+
+    const story = await uploadOnCloudinary(storylocalpath)
+    if(!story.url){
+        throw new ApiError(400, "Story upload failed")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                story: story.url
+            }
+        },
+        {new: true}
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "Story added succesfully")
+    )
+})
+
+const removeStory = asyncHandler(async(req,res)=>{
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                story: undefined
+            }
+        },
+        {new: true}
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "Story removed succesfully")
+    )
+})
+
+
+const startFollowing = asyncHandler(async(req,res)=>{
+    const userWhichIsFollowed = await User.findOne({username: req.param('username')})
+    // console.log(userWhichIsFollowed);
+    if(!userWhichIsFollowed){
+        throw new ApiError(404, "User not found")
+    }
+
+    if(userWhichIsFollowed._id.toString() === req.user._id.toString()){
+        throw new ApiError(400, "You cannot follow yourself")
+    }
+
+    await User.findByIdAndUpdate(
+        userWhichIsFollowed._id,
+        {
+            $set:{
+                followers: [...userWhichIsFollowed.followers, req.user._id]
+            }
+        },
+        {new: true}
+    );
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                following: [...req.user.following, userWhichIsFollowed._id]
+            }
+        },{new:true}
+    ).select("-password");
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "Following started succesfully")
+    )
+})
+
+const stopFollowing = asyncHandler(async(req,res)=>{
+    const userWhichIsUnfollowed = await User.findOne({username: req.param('username')})
+    // console.log(userWhichIsFollowed);
+    if(!userWhichIsUnfollowed){
+        throw new ApiError(404, "User not found")
+    }
+
+    if(userWhichIsUnfollowed._id.toString() === req.user._id.toString()){
+        throw new ApiError(400, "You cannot unfollow yourself")
+    }
+
+    await User.findByIdAndUpdate(
+        userWhichIsUnfollowed._id,
+        {
+            $set:{
+                followers: userWhichIsUnfollowed.followers.filter(id => id.toString()!== req.user._id.toString())
+            }
+        },
+        {new: true}
+    );
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                following: req.user.following.filter(id => id.toString()!== userWhichIsUnfollowed._id.toString())
+            }
+        },{new:true}
+    ).select("-password");
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "Unfollowed the current user succesfully")
+    )
+})
+
+const getFollowersAndFollowingCount = asyncHandler(async (req,res)=>{
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,{
+            followersCount: req.user.followers.length,
+            followingCount: req.user.following.length
+        }, "Followers and following count fetched succesfully")
+    )
+})
+
+const getFollowers = asyncHandler(async (req,res)=>{
+    const followers = await User.find({ _id : {$in: req.user.followers}})
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,followers, "Followers fetched succesfully")
+    )
+})
+
+const getFollowing = asyncHandler(async (req,res)=>{
+    const following = await User.find({ _id : {$in: req.user.following}})
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,following, "Following(users followed by the follower) fetched succesfully")
+    )
+})
 
 export {
     registerUser,
     loginUser,
     logoutUser,
-    refreshAcessToken
+    refreshAcessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails,
+    updateUserAvatar,
+    updateBio,
+    addStory,
+    removeStory,
+    startFollowing,
+    stopFollowing,
+    getFollowers,
+    getFollowing,
+    getFollowersAndFollowingCount
 }
