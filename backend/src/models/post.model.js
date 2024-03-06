@@ -33,7 +33,7 @@ const postSchema = new Schema(
                 ref: "Comment"
             }
         ],
-    }
+    },{timestamps:true}
 );
 
 export const Post = mongoose.model("Post", postSchema);
