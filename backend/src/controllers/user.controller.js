@@ -5,6 +5,7 @@ import {uploadOnCloudinary} from "../utils/Cloudinary.js"
 import {DEFAULT_PFP} from "../constants.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
+import { Post } from "../models/post.model.js"
 
 const generateAccessAndRefreshToken = async(userId) =>
 {
@@ -429,6 +430,16 @@ const getFollowing = asyncHandler(async (req,res)=>{
     )
 })
 
+const getLikedPosts = asyncHandler(async (req,res)=>{
+    const likedPosts = await Post.find({_id : {$in: req.user.likedPosts}})
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,likedPosts, "Liked posts fetched succesfully")
+    )
+})
+
 export {
     registerUser,
     loginUser,
@@ -445,5 +456,6 @@ export {
     stopFollowing,
     getFollowers,
     getFollowing,
-    getFollowersAndFollowingCount
+    getFollowersAndFollowingCount,
+    getLikedPosts
 }

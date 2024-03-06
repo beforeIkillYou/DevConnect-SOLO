@@ -15,7 +15,8 @@ import {
     stopFollowing,
     getFollowers,
     getFollowing,
-    getFollowersAndFollowingCount
+    getFollowersAndFollowingCount,
+    getLikedPosts
 } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import {verifyJWT} from "../middlewares/auth.middleware.js"
@@ -52,5 +53,6 @@ router.route("/stop-following").delete(verifyJWT,stopFollowing);
 router.route("/get-followers").get(verifyJWT, getFollowers);
 router.route("/get-following").get(verifyJWT, getFollowing);
 router.route("/get-followers-and-following-count").get(verifyJWT, getFollowersAndFollowingCount);
+router.route("/get-liked-posts").get(verifyJWT, getLikedPosts)
 
 export default router
