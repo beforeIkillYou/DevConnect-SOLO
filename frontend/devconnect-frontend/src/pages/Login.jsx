@@ -1,22 +1,34 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
+
+
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [User, setUser] = useState(null);
 
     async function loginSubmit(ev) {
         ev.preventDefault();
 
         try{
             await axios.post(
-                '/users/login',
+                '/api/v1/users/login',
                 {username,password}
-            ).catch(err => console.log(err));
+            )
+            .then((res)=>{
+              alert("User Logged In Successfully!");
+              // console.log(res.data.data.user);
+              setUser(res.data.data.user);
+            });
         }catch(e){
             alert("User Login Failed",e)
         }
+    }
+
+    if(User){
+      return <Navigate to={"/"} />
     }
 
     return (
@@ -73,7 +85,7 @@ const Login = () => {
           <p className="text-sm font-light text-gray-500 text-center dark:text-gray-400">
             Dont have an account yet?{" "}
             <Link
-
+              to={'/register'}
               className="font-medium text-primary-600 hover:underline dark:text-primary-500"
             >
               Register
