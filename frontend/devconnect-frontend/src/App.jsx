@@ -1,11 +1,22 @@
-import { useState } from 'react'
+import {Route, Routes} from 'react-router-dom'
+import axios from 'axios'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+//importing pages
+import IndexPage from './pages/IndexPage'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Layout from './components/Layout' 
 
-  return (
-    <h1 className='text-5xl'>Hello devconnect</h1>
+function App() {
+  return(
+    <Routes>
+      <Route path='/' element={<Layout/>}>
+        <Route index element={<IndexPage/>} />
+        <Route path='/login' element={<Login/>} />
+        <Route path='/register' element={<Register/> } />
+      </Route>
+    </Routes>
   )
 }
 
