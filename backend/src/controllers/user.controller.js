@@ -63,7 +63,18 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Internal server error")
     }
 
-    return res.status(201).json(
+    const {accessToken,refreshToken} = await generateAccessAndRefreshToken(createdUser._id);
+    const options = {
+        httpOnly : true,
+        secure : true
+    }
+
+    //added access and refresh tokens with registration too
+    return res
+    .status(201)
+    .cookie("accessToken",accessToken,options) 
+    .cookie("refreshToken",refreshToken, options)
+    .json(
         new ApiResponse(201, createdUser,"User registered successfully")
     )
 });
@@ -142,12 +153,13 @@ const logoutUser = asyncHandler(async(req,res) => {
 })
 
 const refreshAcessToken = asyncHandler(async(req,res) => {
+
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
     if(!incomingRefreshToken){
         throw new ApiError(401, "Unauthorized request!")
     }
-
+    
     try {
         const decodedToken = jwt.verify(incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET)
         const user = await User.findById(decodedToken?._id)
@@ -168,7 +180,7 @@ const refreshAcessToken = asyncHandler(async(req,res) => {
     
         return res
         .status(200)
-        .cookie("acessToken",accessToken, options)
+        .cookie("accessToken",accessToken, options)
         .cookie("refreshToken",newrefreshToken, options)
         .json(
             new ApiResponse(200, {

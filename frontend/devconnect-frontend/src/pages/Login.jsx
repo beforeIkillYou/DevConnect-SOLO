@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -9,6 +9,21 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [User, setUser] = useState(null);
 
+  //1. if the user is already logged in then get him
+  const getCurrentUser = async() =>{
+      await axios.get('/api/v1/users/current-user')
+      .then((res)=>{
+          setUser(res.data.data);
+      })
+      .catch((err) => {})//nothing needs to be done about the errror
+  }
+  // calling getCurrentUser on component mount
+    useEffect(() =>{
+        getCurrentUser();
+    },[])
+
+
+    //2. post function to handle login
     async function loginSubmit(ev) {
         ev.preventDefault();
 
@@ -19,7 +34,6 @@ const Login = () => {
             )
             .then((res)=>{
               alert("User Logged In Successfully!");
-              // console.log(res.data.data.user);
               setUser(res.data.data.user);
             });
         }catch(e){
@@ -27,8 +41,9 @@ const Login = () => {
         }
     }
 
+    //3. if you have user then go to indexpage
     if(User){
-      return <Navigate to={"/"} />
+      return <Navigate to={"/"} User={User} />
     }
 
     return (
@@ -51,6 +66,7 @@ const Login = () => {
               Your Username
             </label>
             <input
+              required
               type="text"
               name="username"
               id="username"
@@ -67,6 +83,7 @@ const Login = () => {
               Password
             </label>
             <input
+              required
               type="password"
               name="password"
               id="password"
