@@ -14,9 +14,6 @@ import Register from './pages/Register'
 import Layout from './components/Layout' 
 import { useState, useEffect } from 'react'
 
-// axios.defaults.baseURL = 'http://localhost:3000/api/v1'
-// axios.defaults.withCredentials  = true
-
 function App() {
   const [User, setUser] = useState(null);
   const [Err, setErr] = useState(null);

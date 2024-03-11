@@ -452,6 +452,35 @@ const getLikedPosts = asyncHandler(async (req,res)=>{
     )
 })
 
+const getHomePage = asyncHandler(async (req,res)=>{ 
+    let posts = [...req.user.posts],stories = [];
+    if(req.user.story){
+        stories.push({avatar:req.user.avatar, story:req.user.story});
+    }
+
+    const user = await User.findById(req.user._id)
+    .select('following')
+    .populate('following')
+    .populate('posts')
+
+     user.following.map((current)=>{
+         posts = [...posts,...current.posts]
+         if(current.story){
+             stories.push({avatar:current.avatar, story:current.story})
+         }
+     })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,
+            {
+                posts,
+                stories,
+            }, "Home page fetched succesfully")
+    )
+})
+
 export {
     registerUser,
     loginUser,
@@ -469,5 +498,6 @@ export {
     getFollowers,
     getFollowing,
     getFollowersAndFollowingCount,
-    getLikedPosts
+    getLikedPosts,
+    getHomePage
 }

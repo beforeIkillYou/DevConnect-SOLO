@@ -16,7 +16,8 @@ import {
     getFollowers,
     getFollowing,
     getFollowersAndFollowingCount,
-    getLikedPosts
+    getLikedPosts,
+    getHomePage
 } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import {verifyJWT} from "../middlewares/auth.middleware.js"
@@ -55,4 +56,6 @@ router.route("/get-following").get(verifyJWT, getFollowing);
 router.route("/get-followers-and-following-count").get(verifyJWT, getFollowersAndFollowingCount);
 router.route("/get-liked-posts").get(verifyJWT, getLikedPosts)
 
+//homepage
+router.route("/homepage").get(verifyJWT, getHomePage);
 export default router

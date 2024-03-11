@@ -18,6 +18,7 @@ const CreatePage = (props) => {
         <>  
             <Navbar User={User}/>
             <div className='ml-64'>
+            //TODO: hadnle story update and posts udoate differently
                 <h1  className='bg-gray-500'>Create page here {User?.username}</h1>
             </div>
         </>
