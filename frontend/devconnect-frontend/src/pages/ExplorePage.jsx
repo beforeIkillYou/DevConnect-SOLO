@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 
-const IndexPage = (props) => {
+const ExplorePage = (props) => {
     const User = props.User;
     const Err = props.Err;
 
@@ -18,10 +18,10 @@ const IndexPage = (props) => {
         <>  
             <Navbar User={User}/>
             <div className='ml-64'>
-                <h1  className='bg-gray-500'>Index page here {User?.username}</h1>
+                <h1  className='bg-gray-500'>Explore page here {User?.username}</h1>
             </div>
         </>
     );
 }
 
-export default IndexPage;
+export default ExplorePage;
