@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 const Story = (props) => {
     const [storyElement, setStoryElement] = useState(<div></div>)
 
-    const showStory = () => {
-        setStoryElement(<div><img src={props.story} className='h-[30rem] w-[50rem] object-fill absolute gap-x-0 gap-y-5 '></img></div>)
+    const showStory = () => {        
+        setStoryElement(<div className='items-center'><img src={props.story} className='h-[20rem] w-[30rem] object-fill absolute gap-x-0 mr-10 items-center'/></div>)
     }
 
     const removeStory = () => {
