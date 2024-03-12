@@ -6,7 +6,12 @@ const Story = (props) => {
     const [storyElement, setStoryElement] = useState(<div></div>)
 
     const showStory = () => {        
-        setStoryElement(<div className='items-center'><img src={props.story} className='h-[20rem] w-[30rem] object-fill absolute gap-x-0 mr-10 items-center'/></div>)
+        setStoryElement(
+        <div className=''>
+            <img src={props.story} className='h-[25rem] w-[40rem] object-fill absolute top-1/4 right-1/4 shadow-inherit drop-shadow-2xl'/>
+            <h1 className='absolute top-[9rem] right-[43rem] text-xl font-mono text-center underline'>{props.username}</h1>
+        </div>
+        )
     }
 
     const removeStory = () => {

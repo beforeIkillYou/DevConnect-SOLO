@@ -323,7 +323,7 @@ const removeStory = asyncHandler(async(req,res)=>{
         req.user._id,
         {
             $set:{
-                story: undefined
+                story: null
             }
         },
         {new: true}
@@ -455,7 +455,7 @@ const getLikedPosts = asyncHandler(async (req,res)=>{
 const getHomePage = asyncHandler(async (req,res)=>{ 
     let posts = [...req.user.posts],stories = [];
     if(req.user.story){
-        stories.push({avatar:req.user.avatar, story:req.user.story});
+        stories.push({avatar:req.user.avatar,username:req.user.username, story:req.user.story});
     }
 
     const user = await User.findById(req.user._id)
@@ -466,7 +466,7 @@ const getHomePage = asyncHandler(async (req,res)=>{
      user.following.map((current)=>{
          posts = [...posts,...current.posts]
          if(current.story){
-             stories.push({avatar:current.avatar, story:current.story})
+             stories.push({avatar:current.avatar, username:current.username, story:current.story})
          }
      })
 
