@@ -44,7 +44,9 @@ const viewPost = asyncHandler(async(req,res)=>{
                 views:1
             }
         },{new:true}
-    );
+    )
+    .populate('comments')
+    .populate('owner','username avatar')
     if(!post){
         throw new ApiError(404, "Post not found")
     }

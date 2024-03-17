@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 //importing components
 import Navbar from '../components/Navbar';
 import Story from '../components/Story';
-
+import Post from '../components/Post';
 
 
 const IndexPage = (props) => {
@@ -100,9 +100,9 @@ const IndexPage = (props) => {
     return (
         <>  
             <Navbar User={User}/>
-            <div className='ml-64 bg-zinc-900  text-white h-screen overflow-y-auto no-scrollbar'>
+            <div className='ml-64 bg-zinc-950  text-white h-screen overflow-y-auto no-scrollbar'>
                 {/* stories here  */}
-                <div className='stories h-1/6 bg-zinc-900 shadow-xl mb-28 pl-16 flex flex-row items-center justify-start overflow-x-scroll no-scrollbar' id='stories'>    
+                <div className='stories h-1/6 bg-zinc-950 shadow-xl mb-28 pl-16 flex flex-row items-center justify-start overflow-x-scroll no-scrollbar' id='stories'>    
                     {/* add story button */}
                     <div className='mr-14'>
                     <button className='flex flex-row' onClick={handleStoryChange}>
@@ -128,9 +128,13 @@ const IndexPage = (props) => {
 
                 {/* posts here  */}
                 <div className='flex flex-col justify-center items-center ' id='posts'>
-                    <div className=' w-1/2 h-[40rem]  bg-zinc-800 shadow-2xl shadow-inherit rounded-lg mb-28'>Post1</div>
-                    <div className=' w-1/2 h-[40rem]  bg-zinc-800 shadow-2xl shadow-inherit rounded-lg mb-28'>Post2</div>
-                    <div className=' w-1/2 h-[40rem]  bg-zinc-800 shadow-2xl shadow-inherit rounded-lg mb-28'>Post3</div>
+                    {
+                        Posts.map((postId)=>{
+                            return(
+                                <Post postId={postId} />
+                            )
+                        })
+                    }
                 </div>
             </div>
         </>
