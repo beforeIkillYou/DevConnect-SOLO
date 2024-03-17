@@ -131,7 +131,7 @@ const IndexPage = (props) => {
                     {
                         Posts.map((postId)=>{
                             return(
-                                <Post postId={postId} />
+                                <Post postId={postId} User={User}/>
                             )
                         })
                     }

@@ -1,24 +1,23 @@
 import axios from 'axios';
 import React,{useEffect, useState} from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 //importing components
 import Navbar from '../components/Navbar';
 
 
 const ProfilePage = (props) => {
-    const User = props.User;
-    const Err = props.Err;
+    const username = useParams();
+    //TODO: use this username to get the required user and display him
 
-    if(Err){//if there is error in getting the current user then go to login
-        return <Navigate to={'/login'} />
-    }
+    const User = props?.User;
 
+    // console.log(username);
     return (
         <>  
             <Navbar User={User}/>
             <div className='ml-64'>
-                <h1  className='bg-gray-500'>Profile page here {User?.username}</h1>
+                <h1  className='bg-gray-500'>Profile page here {username.username}</h1>
             </div>
         </>
     );

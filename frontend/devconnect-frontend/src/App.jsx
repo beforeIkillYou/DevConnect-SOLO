@@ -45,7 +45,8 @@ function App() {
         <Route path='/explore' element={<ExplorePage User={User} Err={Err}/>}/>
         <Route path='/notifications' element={<NotificationsPage User={User} Err={Err}/>}/>
         <Route path='/search' element={<SearchPage User={User} Err={Err}/>}/>
-        <Route path='/profile' element={<ProfilePage User={User} Err={Err}/>}/>
+
+        <Route path='/profile/:username' element={<ProfilePage User={User}/>} />
       </Route>
     </Routes>
   )

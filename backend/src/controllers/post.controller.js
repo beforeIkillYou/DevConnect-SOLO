@@ -66,9 +66,9 @@ const likePost = asyncHandler(async(req,res)=>{
     }
 
     //adding or removing the post based on if already liked or not (like in instagram)
-    let change = 0;
+    let change = 1;
     if(req.user.likedPosts.includes(postId)){
-        req.user.likedPosts.splice(req.user.likePost?.indexOf(postId),1)
+        req.user.likedPosts.splice(req.user.likedPosts.indexOf(postId),1)
         await req.user.save()
         change = -1 //decrease the likes
     }else{

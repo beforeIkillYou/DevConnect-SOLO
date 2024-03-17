@@ -1,11 +1,28 @@
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { FILLED_HEART,EMPTY_HEART } from '../Constants';
 
 
 const Post = (props) => {
     const postId = props.postId;
     const [Post, setPost] = useState("");
-    
+    const User = props?.User;
+
+    //1. handling likes and getting posts
+    const handleLike = async() => {
+        try{
+            await axios
+            .post(`/api/v1/posts/like-post?_id=${postId}`)
+            .then((res)=>{
+                window.location.reload();
+            })
+            .catch((err) => {console.log(err);});
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     const getPost = async(localpostId) => {
         try {
             await axios
@@ -20,26 +37,34 @@ const Post = (props) => {
             console.log(err);
         }
     }
-    
+
+    //2. deciding the type of heart based on the state if it is liked or not
+    const heart = (User.likedPosts.includes(postId))?FILLED_HEART:EMPTY_HEART;
+
     useEffect(() => {
         getPost(postId);
     }, []);
 
     // console.log(Post.comments)
     return (
-    <div className='w-1/2 h-auto overflow-y-visible bg-zinc-900 shadow-xl shadow-black-950 rounded-lg mb-28'>
+    <div className='w-1/2 h-auto min-h-[30rem] overflow-y-visible bg-zinc-900 shadow-xl shadow-black-950 rounded-lg mb-28'>
         
         {/* post owner data */}
-        <div className='flex flex-row gap-5 items-center align-middle my-5 mx-5'>
-            <div className='w-16 h-16 bg-zinc-800 rounded-full overflow-hidden'>
-                {/* user avatar */}
-                <img src={Post.owner?.avatar} className='object-cover rounded-full w-16 h-16'></img>
+        <Link 
+            to={`/profile/${Post.owner?.username}`}
+        >
+            <div className='flex flex-row gap-5 items-center align-middle my-5 mx-5'>
+                <div className='w-16 h-16 bg-zinc-800 rounded-full overflow-hidden'>
+                    {/* user avatar */}
+                    <img src={Post.owner?.avatar} className='object-cover rounded-full w-16 h-16'></img>
+                </div>
+                <div className='text-xl'>
+                    {/* Username */}
+                    {Post.owner?.username}
+                </div>
             </div>
-            <div className='text-xl'>
-                {/* Username */}
-                {Post.owner?.username}
-            </div>
-        </div>
+        </Link>
+        
 
         {/* post media */}
         <div className='w-full bg-zinc-800'>
@@ -48,10 +73,8 @@ const Post = (props) => {
 
         {/* post like,comment vgrh */}
         <div className='flex flex-row align-middle items-center mt-4'>
-            <div className='ml-1 mr-4'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                </svg>
+            <div className='ml-1 mr-4' onClick={handleLike}>
+                {heart}
             </div>
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
@@ -72,7 +95,7 @@ const Post = (props) => {
         </div>
 
         {/* comments vgrh */}
-        <div className='mx-2 justify-between flex flex-wrap mt-4 font-thin'>
+        <div className='mx-2 mb-1 justify-between flex flex-wrap mt-4 font-thin'>
             <div>
                 View all {Post.comments?.length} comments.
             </div>

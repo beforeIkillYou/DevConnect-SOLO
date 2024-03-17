@@ -481,6 +481,21 @@ const getHomePage = asyncHandler(async (req,res)=>{
     )
 })
 
+const getUserByUsername = asyncHandler(async (req, res) =>{
+    const user = await User.findOne({username : req.body.username}).select('-password -refreshToken');
+
+
+    if(!user){
+        throw new ApiError(400, "User does not exist!");
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,user, "User fetched succesfully")
+    )
+})
+
 export {
     registerUser,
     loginUser,
@@ -499,5 +514,6 @@ export {
     getFollowing,
     getFollowersAndFollowingCount,
     getLikedPosts,
-    getHomePage
+    getHomePage,
+    getUserByUsername
 }
