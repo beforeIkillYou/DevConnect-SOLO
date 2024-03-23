@@ -496,6 +496,15 @@ const getUserByUsername = asyncHandler(async (req, res) =>{
     )
 })
 
+const getUsersOfSimilarUsername = asyncHandler(async (req, res) =>{
+        const regex = new RegExp(`^${req.params.username}`,'i');
+        const users = await User.find({username : regex})
+        .select('username avatar fullname');
+        res
+        .status(200)
+        .json(new ApiResponse(200,users, "Users fetched successfully fet"))
+})
+
 export {
     registerUser,
     loginUser,
@@ -515,5 +524,6 @@ export {
     getFollowersAndFollowingCount,
     getLikedPosts,
     getHomePage,
-    getUserByUsername
+    getUserByUsername,
+    getUsersOfSimilarUsername
 }

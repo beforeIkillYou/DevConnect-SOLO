@@ -98,7 +98,7 @@ const Post = (props) => {
     }
 
     //2. deciding the type of heart based on the state if it is liked or not
-    const heart = (User.likedPosts.includes(postId))?FILLED_HEART:EMPTY_HEART;
+    const heart = (User.likedPosts?.includes(postId))?FILLED_HEART:EMPTY_HEART;
     useEffect(() => {
         getPost(postId);
     }, []);

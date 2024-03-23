@@ -18,7 +18,8 @@ import {
     getFollowersAndFollowingCount,
     getLikedPosts,
     getHomePage,
-    getUserByUsername
+    getUserByUsername,
+    getUsersOfSimilarUsername
 } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import {verifyJWT} from "../middlewares/auth.middleware.js"
@@ -58,6 +59,7 @@ router.route("/get-followers").get(verifyJWT, getFollowers);
 router.route("/get-following").get(verifyJWT, getFollowing);
 router.route("/get-followers-and-following-count").get(verifyJWT, getFollowersAndFollowingCount);
 router.route("/get-liked-posts").get(verifyJWT, getLikedPosts)
+router.route("/get-users-of-similar-username/:username").get(verifyJWT, getUsersOfSimilarUsername);
 
 //homepage
 router.route("/homepage").get(verifyJWT, getHomePage);
