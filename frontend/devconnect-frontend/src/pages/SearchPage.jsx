@@ -29,7 +29,7 @@ const SearchPage = (props) => {
                 res.data.data.map((user)=>{
                     return(
                         <div 
-                        className='bg-zinc-800 mx-28  py-3 shadow-2xl shadow-inherit flex flex-row gap-5 px-5'>
+                        className='bg-zinc-800 mx-28  py-3 shadow-2xl shadow-inherit flex flex-row gap-5 px-5 hover:bg-transparent duration-200'>
                             <img src={user.avatar} className='w-16 h-16 rounded-full object-cover ' />
                             <div>
                                 <div className='text-xl'>  
@@ -66,6 +66,8 @@ const SearchPage = (props) => {
                 <div className='flex flex-col my-1 '>
                     {searchedUsers}
                 </div>
+
+                <img src="https://i.pinimg.com/originals/c1/d1/c2/c1d1c21b450107359631600f72e0bd4a.gif" className='w-auto h-auto items-center my-20 mx-[26vw] bg-blend-multiply'></img>
             </div>
         </>
     );

@@ -121,9 +121,19 @@ const deletePost = asyncHandler(async (req,res)=>{
     )
 })
 
+const getAllPosts = asyncHandler(async (req,res) => {
+    const posts = await Post.find()
+    return res
+   .status(200)
+   .json(
+        new ApiResponse(200,posts, "Posts fetched succesfully")
+    )
+})
+
 export {
     createPost,
     viewPost,
     likePost,
-    deletePost
+    deletePost,
+    getAllPosts
 }

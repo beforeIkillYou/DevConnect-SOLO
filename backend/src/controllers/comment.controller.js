@@ -69,7 +69,44 @@ const likeComment = asyncHandler(async (req, res) => {
     )
 });
 
+const getComment = asyncHandler(async(req, res) => {
+    const commentId = req.param("_id")
+    const comment = await Comment.findById(commentId)
+    .populate({
+        path:"post",
+        select: "media"
+    }
+    )
+    if(!comment){
+        throw new ApiError(404, "Comment not found")
+    }
+    return res.status(200).json(
+        new ApiResponse(200, {
+            comment
+        }, "Comment fetched successfully")
+    )
+})
+
+const getAllCommentsofCurrentUser = asyncHandler(async(req, res) => {
+    const comments = await Comment.find({owner: req.user._id})
+    .populate({
+        path:"post",
+        select: "media"
+    }
+    )
+    if(!comments){
+        throw new ApiError(404, "Comments not found")
+    }
+    return res.status(200).json(
+        new ApiResponse(200, {
+            comments
+        }, "Comments fetched successfully")
+    )
+})
+
 export{
     addComment,
-    likeComment
+    likeComment,
+    getComment,
+    getAllCommentsofCurrentUser
 }
