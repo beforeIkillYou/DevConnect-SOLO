@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React,{useEffect, useState} from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
+
 
 //importing components
 import Navbar from '../components/Navbar';
-import { loadConfigFromFile } from 'vite';
 
 
 const SearchPage = (props) => {
@@ -18,11 +18,34 @@ const SearchPage = (props) => {
         return <Navigate to={'/login'} />
     }
 
-    const handleSearch=async () =>{
-        console.log("was here");
-        await axios.get(`/api/v1/users/get-users-of-similar-username/${searchedUsername}`)
+    const handleSearch = async (ev) =>{
+        ev.preventDefault()
+
+        axios.get(`/api/v1/users/get-users-of-similar-username/${searchedUsername}`)
         .then((res) => {
-            console.log(res);
+            // console.log(res.data);
+            setsearchedUsers(
+                
+                res.data.data.map((user)=>{
+                    return(
+                        <div 
+                        className='bg-zinc-800 mx-28  py-3 shadow-2xl shadow-inherit flex flex-row gap-5 px-5'>
+                            <img src={user.avatar} className='w-16 h-16 rounded-full object-cover ' />
+                            <div>
+                                <div className='text-xl'>  
+                                    <Link
+                                    to={`/profile/${user.username}`}>
+                                        {user.username}
+                                    </Link>
+                                </div>
+                                <div>
+                                    {user.fullname}
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })
+            )
         })
         .catch((err)=>{
             console.log(err);
@@ -36,9 +59,13 @@ const SearchPage = (props) => {
             
             <div className='bg-zinc-950 ml-64  text-white h-screen overflow-y-auto no-scrollbar'>
                 <form onSubmit={handleSearch} className='flex items-center justify-center'>
-                    <input  type='text' className='bg-zinc-900 w-3/4 p-2 mt-5 m-2 mr-4 font-thin border-s-zinc-800 border-b-2' placeholder='Search User...' autoFocus onChange={(ev)=>{setsearchedUsername(ev.target.value)}} required></input>
+                    <input name='searchedUser' type='text' className='bg-zinc-900 w-3/4 p-2 mt-5 m-2 mr-4 font-thin border-s-zinc-800 border-b-2' placeholder='Search User...' autoFocus onChange={(ev)=>{setsearchedUsername(ev.target.value)}} required></input>
                     <button type='submit' className='my-2 mr-4 hover:bg-zinc-800 p-2 rounded-md'>Search</button>
-                </form>     
+                </form>  
+
+                <div className='flex flex-col my-1 '>
+                    {searchedUsers}
+                </div>
             </div>
         </>
     );
