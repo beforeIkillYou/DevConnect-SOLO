@@ -63,7 +63,7 @@ const Register = () => {
 
     return (
     <section className="bg-gray-50 dark:bg-zinc-900">
-    <div className="flex flex-row items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div className="flex flex-row items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 overflow-y-hidden">
     <p  href="#" className="flex drop-shadow-2xl items-center mb-2 mr-40 text-6xl  font-semibold text-gray-900 dark:text-white underline font-mono">
       Hello, DevConnect!!
     </p>

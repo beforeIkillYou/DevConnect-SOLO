@@ -39,7 +39,7 @@ const NotificationsPage = (props) => {
                         return (
                             <div id='commentNotifcation' className=' h-1/4 w-3/4 my-8 bg-zinc-900 flex flex-row justify-around items-center hover:-translate-y-2 hover:rounded-xl duration-300'>
                                 <div className='w-2/6'>
-                                    <img src={comment?.post.media} className='h-28 w-28 rounded-xl object-cover mx-4 mr-10'/>
+                                    <img src={comment?.post?.media} className='h-28 w-28 rounded-xl object-cover mx-4 mr-10'/>
                                 </div>
 
                                 <div className='w-3/6'>
@@ -47,7 +47,7 @@ const NotificationsPage = (props) => {
                                 </div>
 
                                 <div className='text-bold font-semibold w-1/6  text-center'>
-                                    Likes: {comment?.likes.length}
+                                    Likes: {comment?.likes?.length}
                                 </div>
                             </div>
                         )

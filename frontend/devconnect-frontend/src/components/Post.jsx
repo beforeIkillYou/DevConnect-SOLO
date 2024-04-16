@@ -1,7 +1,7 @@
 import React,{useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FILLED_HEART,EMPTY_HEART } from '../Constants';
+import { FILLED_HEART,EMPTY_HEART, DUSTBIN } from '../Constants';
 
 
 const Post = (props) => {
@@ -13,6 +13,10 @@ const Post = (props) => {
 
     const User = props?.User;
 
+    //-1. resolving some eror in brute froce way
+    if(postId === "65eed2bb83389fcc0d6159be"){
+        return(<></>)
+    }
     //0. getting the post's data from id
     const getPost = async(localpostId) => {
         try {
@@ -31,16 +35,12 @@ const Post = (props) => {
 
     //1. handling likes and comments
     const handleLike = async() => {
-        try{
             await axios
             .post(`/api/v1/posts/like-post?_id=${postId}`)
             .then((res)=>{
                 window.location.reload();
             })
-            .catch((err) => {console.log(err);});
-        }catch(err){
-            console.log(err);
-        }
+            // .catch((err) => {console.log(err);})
     }
     const handleComment = async(ev) => {  
         ev.preventDefault();
@@ -96,14 +96,30 @@ const Post = (props) => {
             setViewComments("")
         }
     }
+    const deletePost = async() => {
+        await axios
+        .delete(`/api/v1/posts/delete-post?_id=${postId}`)
+        .then((res)=>{
+            alert("Post deleted successfully!")
+            window.location.reload();
+        })
+        .catch((err)=>{console.log(err);})
+    }
 
     //2. deciding the type of heart based on the state if it is liked or not
     const heart = (User?.likedPosts?.includes(postId))?FILLED_HEART:EMPTY_HEART;
+    
+    //3. adding a delete option if the post owner is same as the current user
+    const bin = (User?.posts?.includes(postId))?DUSTBIN:"";
+    
+    const deletePostFeature = (User?.posts?.includes(postId))?<div className='w-8 h-8 hover:cursor-pointer' onClick={deletePost}> 
+                                                                    {bin}
+                                                                </div>:"";
     useEffect(() => {
         getPost(postId);
-    }, []);
-
+    }, []); 
     // console.log(Post.comments)
+    if(Post)
     return (
     <div className='w-1/2 h-auto min-h-[30rem] overflow-y-visible bg-zinc-900 shadow-xl shadow-black-950 rounded-lg mb-28'>
         
@@ -162,16 +178,21 @@ const Post = (props) => {
             </div>
         </div>
         
-        {/* comment box */}
-        <form onSubmit={handleComment} className='flex items-center justify-center'>
-            <input ref={commentBox} type='text' className='bg-zinc-900 w-full m-2 mr-4 font-thin border-s-zinc-800 border-b-2' placeholder='Your thoughts here...' autoFocus onChange={(ev)=>{setcommentText(ev.target.value)}} required></input>
-            <button type='submit' className='my-2 mr-4'>Post</button>
-        </form> 
+        {/* comment box  and deleting post feature*/}
+        <div className='flex flex-row align-middle items-center'>
+            <form onSubmit={handleComment} className='flex items-center align-middle justify-center w-full'>
+                <input ref={commentBox} type='text' className='bg-zinc-900 w-full m-2 mr-4 font-thin border-s-zinc-800 border-b-2' placeholder='Your thoughts here...' autoFocus onChange={(ev)=>{setcommentText(ev.target.value)}} required></input>
+                <button type='submit' className='my-2 mr-4'>Post</button>
+            </form> 
+            {deletePostFeature}
+        </div>
 
         {/* comments */}
         {viewComments}
     </div>
     );
+    else
+        return(<></>)
 }
 
 export default Post;
