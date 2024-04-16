@@ -60,7 +60,8 @@ const ProfilePage = (props) => {
         getCurrentUser();
     },[])
 
-    const choice = (CurrUser?._id === User?._id)?"Edit":(User?.following.includes(CurrUser?._id))?"Unfollow":"Follow";
+    //todo: make it "Edit" instead of the empty string
+    const choice = (CurrUser?._id === User?._id)?"":(User?.following.includes(CurrUser?._id))?"Unfollow":"Follow";
     ///you can either edit your details or follow a given user or unfollwo a given user
 
     // console.log(CurrUser);
