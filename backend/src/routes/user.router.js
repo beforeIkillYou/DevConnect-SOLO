@@ -38,7 +38,7 @@ router.route("/register").post(
 );
 router.route("/login").post(loginUser);
 
-router.route("/get-user-by-username").get(getUserByUsername);
+router.route("/get-user-by-username").post(getUserByUsername);
 
 //secured routes
 router.route("/logout").post(verifyJWT, logoutUser);
