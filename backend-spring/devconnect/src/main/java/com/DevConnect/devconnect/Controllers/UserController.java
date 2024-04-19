@@ -65,6 +65,12 @@ public class UserController {
         // System.err.println(username);
         try{
             UserModel user = this.userService.loginUser(username, password);
+            if(user == null){
+                apiReturnModel.setStatus("Fail");
+                apiReturnModel.setMessage(" Username or Password is incorrect");
+                apiReturnModel.setCount(0);
+                return ResponseEntity.ok(apiReturnModel);
+            }
             userVec.add(user);
 
             apiReturnModel.setData(userVec);
