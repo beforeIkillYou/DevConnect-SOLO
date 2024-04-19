@@ -1,7 +1,6 @@
 package com.DevConnect.devconnect.Models;
 
 
-import org.hibernate.validator.constraints.UniqueElements;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +25,7 @@ public class UserModel {
     private String avatar;
 
     UserModel(){
-        
+
     }
 
     UserModel(String name, String username, String email, String password, String bio, String avatar){
