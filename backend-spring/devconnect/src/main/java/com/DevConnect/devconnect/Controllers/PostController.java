@@ -32,7 +32,7 @@ public class PostController {
 
     @PostMapping("/create-post")
     public ResponseEntity<APIReturnModel> createPost(@RequestBody PostModel post) {
-        System.err.println(post.getMedia());
+        // System.err.println(post.getMedia());
         apiReturnModel = new APIReturnModel();
         postVec = new Vector<PostModel>();
 
