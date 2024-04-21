@@ -14,6 +14,7 @@ import com.DevConnect.devconnect.Utils.APIReturnModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -32,11 +33,13 @@ public class UserController {
 	private Vector<UserModel> userVec;
 
     @GetMapping("/test")
-    public String getMethodName() {
-        return "Final hello devconnect";
+    public String test() {
+        return "hello devconnect";
     }
+
+    // 1. siginging in and registration
     @PostMapping("/register")
-    public ResponseEntity<?> postMethodName(@RequestBody UserModel usermodel) {
+    public ResponseEntity<?> regisetrUser(@RequestBody UserModel usermodel) {
         apiReturnModel = new APIReturnModel();
         userVec = new Vector<>();
 
@@ -59,7 +62,7 @@ public class UserController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<?> postMethodName(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public ResponseEntity<?> loginUser(@RequestParam("username") String username, @RequestParam("password") String password) {
         apiReturnModel = new APIReturnModel();
         userVec = new Vector<>();
         // System.err.println(username);
@@ -85,5 +88,41 @@ public class UserController {
         }
 
         return ResponseEntity.ok(apiReturnModel);
+    }
+
+    @GetMapping("/{username}")
+    public UserModel getsUserbyUsername(@PathVariable("username") String username) {
+        try{
+            UserModel user = this.userService.findByUsername(username);
+            return user;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // 2. following and unfollwing other users
+    @PostMapping("/{userId}/follow/{followeeId}")
+    public String followUser(@PathVariable long userId, @PathVariable long followeeId) {
+        userService.followUser(userId, followeeId);
+
+        return "Started following user";
+    }
+
+    @PostMapping("/{userId}/unfollow/{followeeId}")
+    public String unfollowUser(@PathVariable long userId, @PathVariable long followeeId) {
+        userService.unfollowUser(userId, followeeId);
+
+        return "Stopped following user";
+    }
+
+    @GetMapping("/{userId}/followers")
+    public Iterable<UserModel> getFollowers(@PathVariable long userId) {
+        return userService.getFollowers(userId);
+    }
+
+    @GetMapping("/{userId}/following")
+    public Iterable<UserModel> getFollowing(@PathVariable long userId) {
+        return userService.getFollowing(userId);
     }
 }
