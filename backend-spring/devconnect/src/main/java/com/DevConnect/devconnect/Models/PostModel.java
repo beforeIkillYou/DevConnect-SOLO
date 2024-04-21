@@ -2,6 +2,8 @@ package com.DevConnect.devconnect.Models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,10 +30,12 @@ public class PostModel {
     @Column(nullable = false)
     private String description;
 
+    @JsonIgnore
     private int views = 0;
 
     private int likes = 0;
 
+    @JsonIgnore
     @ManyToOne
     private UserModel owner;
 
