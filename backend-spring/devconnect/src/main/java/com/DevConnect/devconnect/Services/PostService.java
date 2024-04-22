@@ -4,15 +4,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.DevConnect.devconnect.Models.PostModel;
+import com.DevConnect.devconnect.Models.UserModel;
 import com.DevConnect.devconnect.Repositories.PostRepository;
+import com.DevConnect.devconnect.Repositories.UserRepository;
+import com.DevConnect.devconnect.Utils.PostDTO;
 
 @Service
 public class PostService {
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     
-    public PostModel createPost(PostModel model){
-        return postRepository.save(model);
+    public PostModel createPost(PostDTO postDTO){
+        UserModel user = userRepository.findById(postDTO.getOwnerId()).get();
+        
+        PostModel newPost = new PostModel();
+        newPost.setOwner(user);
+        newPost.setMedia(postDTO.getMedia());
+        newPost.setDescription(postDTO.getDescription());
+        newPost.setTitle(postDTO.getTitle());
+
+        return postRepository.save(newPost);
     } 
 
     public Iterable<PostModel> getAllPosts(){

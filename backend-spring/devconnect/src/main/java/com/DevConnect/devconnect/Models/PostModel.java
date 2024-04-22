@@ -35,7 +35,6 @@ public class PostModel {
 
     private int likes = 0;
 
-    @JsonIgnore
     @ManyToOne
     private UserModel owner;
 
@@ -45,13 +44,15 @@ public class PostModel {
     @ManyToMany
     private List<UserModel> likedUsers;
 
-    PostModel() {
+    public PostModel() {
     }
 
-    PostModel(String media, String title, String description) {
+
+    public PostModel(String media, String title, String description, UserModel owner) {
         this.media = media;
         this.title = title;
         this.description = description;
+        this.owner = owner;
     }
 
     public String getMedia() {

@@ -43,9 +43,11 @@ public class UserModel {
 
     private String story;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<PostModel> posts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<CommentModel> comments;
 

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.DevConnect.devconnect.Models.CommentModel;
 import com.DevConnect.devconnect.Services.CommentService;
 import com.DevConnect.devconnect.Utils.APIReturnModel;
+import com.DevConnect.devconnect.Utils.CommentDTO;
 
 import java.util.Vector;
 
@@ -32,7 +33,7 @@ public class CommentController {
     private APIReturnModel apiReturnModel;
     private Vector<CommentModel> comments;
     @PostMapping("/add-comment")
-    public  ResponseEntity<APIReturnModel>  addComment(@RequestBody CommentModel newComment){
+    public  ResponseEntity<APIReturnModel>  addComment(@RequestBody CommentDTO newComment){
         apiReturnModel = new APIReturnModel();
         comments = new Vector<>();
 

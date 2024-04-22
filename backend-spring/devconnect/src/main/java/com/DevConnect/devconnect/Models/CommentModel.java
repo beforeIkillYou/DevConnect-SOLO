@@ -1,6 +1,5 @@
 package com.DevConnect.devconnect.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,15 +19,13 @@ public class CommentModel {
     @Column(nullable = false)
     private String text;
 
-    @JsonIgnore
     @ManyToOne
     private UserModel owner;
 
-    @JsonIgnore
     @ManyToOne
     private PostModel post;
 
-    CommentModel() {
+    public CommentModel() {
     }
 
     CommentModel(String text) {

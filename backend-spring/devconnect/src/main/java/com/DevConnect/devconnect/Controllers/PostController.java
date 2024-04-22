@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.DevConnect.devconnect.Models.PostModel;
 import com.DevConnect.devconnect.Services.PostService;
 import com.DevConnect.devconnect.Utils.APIReturnModel;
+import com.DevConnect.devconnect.Utils.PostDTO;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,7 +33,7 @@ public class PostController {
 
 
     @PostMapping("/create-post")
-    public ResponseEntity<APIReturnModel> createPost(@RequestBody PostModel post) {
+    public ResponseEntity<APIReturnModel> createPost(@RequestBody PostDTO post) {
         // System.err.println(post.getMedia());
         apiReturnModel = new APIReturnModel();
         postVec = new Vector<PostModel>();
