@@ -74,16 +74,17 @@ public class UserModel implements UserDetails{
     @ManyToMany(mappedBy = "followers")
     private List<UserModel> following;
 
-    UserModel(){
+    public UserModel(){
     }
 
-    UserModel(String name, String username, String email, String password, String bio, String avatar){
+    public UserModel(String name, String username, String email, String password, String bio, String avatar, Role role){
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.bio = bio;
         this.avatar = avatar;
+        this.role = role;
     }
 
     public String getUsername(){
@@ -172,6 +173,21 @@ public class UserModel implements UserDetails{
         return refreshToken;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Long getId() {
+        return userId;
+    }
+
+    public void setId(Long userId) {
+        this.userId = userId;
+    }
     
 
 
@@ -199,11 +215,6 @@ public class UserModel implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    public UserDetails orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 
 }   
