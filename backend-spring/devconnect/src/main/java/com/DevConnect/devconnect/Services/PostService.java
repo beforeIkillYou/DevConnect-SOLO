@@ -73,4 +73,12 @@ public class PostService {
         }
     }
 
+    public Iterable<PostModel> getPostsOfUser(Long userId){
+        try{
+            return postRepository.findByOwnerId(userId);
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

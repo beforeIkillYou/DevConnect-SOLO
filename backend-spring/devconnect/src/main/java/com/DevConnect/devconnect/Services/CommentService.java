@@ -52,4 +52,8 @@ public class CommentService {
             return "Error deleting comment";
         }
     }
+
+    public Iterable<CommentModel> getCommentOfUser(Long userId) {
+        return commentRepository.findByOwnerId(userId);
+    }
 }

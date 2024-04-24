@@ -62,5 +62,10 @@ public class CommentController {
     public CommentModel getComment(@PathVariable("commentId") Long commentId) {
         return this.commentService.getCommentById(commentId);
     }
+
+    @GetMapping("/get-comment-of-user/{userId}")
+    public Iterable<CommentModel> getCommentOfUser(@PathVariable("userId") Long userId) {
+        return this.commentService.getCommentOfUser(userId);
+    }
     
 }

@@ -78,4 +78,8 @@ public class PostController {
         return postService.getAllPosts();
     }
     
+    @GetMapping("/get-posts-of-user/{userId}")
+    public Iterable<PostModel> getPostsOfUser(@PathVariable("userId") Long userId){
+        return postService.getPostsOfUser(userId);
+    }
 }   
