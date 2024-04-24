@@ -41,10 +41,10 @@ public class AuthenticationController {
     }
 
     @GetMapping("logout")
-    public ResponseEntity<AuthenticationResponse> logout(
+    public AuthenticationResponse logout(
             @RequestHeader("Authorization") String token
     ) {
-        return ResponseEntity.ok(authService.logout(token));
+        return (authService.logout(token));
     }
 
     @PostMapping("update/{id}")

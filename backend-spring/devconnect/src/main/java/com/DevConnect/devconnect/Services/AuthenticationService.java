@@ -61,37 +61,37 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(user);
 
         saveUserToken(jwt, user);
-
         return new AuthenticationResponse(jwt, "User registration was successful", user);
-
     }
 
     public AuthenticationResponse authenticate(UserModel request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
+            new UsernamePasswordAuthenticationToken(
+                    request.getUsername(),
+                    request.getPassword()
+            )
         );
 
         UserModel user = repository.getUserByUsername(request.getUsername());
         String jwt = jwtService.generateToken(user);
 
+        // System.out.println(user.getName());
+
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
 
-        UserModel newUser = new UserModel();
-        newUser.setUsername(user.getUsername());
-        newUser.setEmail(user.getEmail());
-        newUser.setRole(user.getRole());
-        newUser.setId(user.getId());
-        user.setAvatar(request.getAvatar());
-        user.setBio(request.getBio());
-        user.setName(request.getName());
-        user.setRole(request.getRole());
+        // UserModel newUser = new UserModel();
+        // newUser.setUsername(user.getUsername());
+        // newUser.setEmail(user.getEmail());
+        // newUser.setRole(user.getRole());
+        // newUser.setId(user.getId());
+        // user.setAvatar(request.getAvatar());
+        // user.setBio(request.getBio());
+        // user.setName(request.getName());
+        // user.setRole(request.getRole());
 
 
-        return new AuthenticationResponse(jwt, "User login was successful", newUser);
+        return new AuthenticationResponse(jwt, "User login was successful", user);
 
     }
 
