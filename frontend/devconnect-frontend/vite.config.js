@@ -8,6 +8,7 @@ export default defineConfig({
     proxy:{
       '/api':  'https://devconnect-solo.onrender.com'
     },
+    host:'0.0.0.0',
     port: 3000,
   }
 })
