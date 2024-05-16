@@ -21,12 +21,12 @@ const SearchPage = (props) => {
     const handleSearch = async (ev) =>{
         ev.preventDefault()
 
-        axios.get(`/api/v1/users/get-users-of-similar-username/${searchedUsername}`)
+        axios.get(`http://localhost:8080/users/users-of-similar-usernames/${searchedUsername}`)
         .then((res) => {
-            // console.log(res.data);
+            console.log(res.data);
             setsearchedUsers(
                 
-                res.data.data.map((user)=>{
+                res.data.map((user)=>{
                     return(
                         <div 
                         className='bg-zinc-800 mx-28  py-3 shadow-2xl shadow-inherit flex flex-row gap-5 px-5 hover:bg-transparent duration-200'>

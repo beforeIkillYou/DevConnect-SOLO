@@ -49,7 +49,7 @@ public class UserModel implements UserDetails{
     private String avatar;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role",nullable = true)
     private Role role;
 
     private String story;

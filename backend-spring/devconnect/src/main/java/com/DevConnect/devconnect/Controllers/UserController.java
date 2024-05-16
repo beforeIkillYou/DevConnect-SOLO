@@ -144,6 +144,12 @@ public class UserController {
     public Iterable<StoryDTO> getStroiesOfUserAndFollowing(@PathVariable("userId") Long userId) { //gets and returns stories of all the users and the following
         return this.userService.getStories(userId);
     }
+
+    @GetMapping("/users-of-similar-usernames/{username}") 
+    public Iterable<UserModel> getSimilarUsenameUsers(@PathVariable("username") String username) {
+        return this.userService.getSimilarUsernameUsers(username);
+    }
+    
     
 
     // @GetMapping("/homepage")

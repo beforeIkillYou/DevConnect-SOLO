@@ -19,7 +19,7 @@ const Post = (props) => {
     // if(postId === "65eed2bb83389fcc0d6159be"){
     //     return(<></>)
     // }
-    // //0. getting the post's data from id
+    //0. getting the post's data from id
     // const getPost = async(localpostId) => {
     //     try {
     //         await axios

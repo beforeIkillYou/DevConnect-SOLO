@@ -19,12 +19,12 @@ const ExplorePage = (props) => {
 
     //  getting all posts
     const getAllPosts = async () => {
-        await axios.get('/api/v1/posts/get-all-posts')
+        await axios.get('http://localhost:8080/posts/get-all-posts')
         .then((res)=>{
-            setAllPost(res.data.data)
+            setAllPost(res.data);
         })
         .catch((err)=>{
-            console.log(err);
+            setErr(err);
         });
     }
     useEffect(() =>{
@@ -33,7 +33,7 @@ const ExplorePage = (props) => {
 
 
     
-    // console.log(allPosts);
+    console.log(allPosts);
     return (
         <>  
             <Navbar User={User}/>
@@ -44,7 +44,8 @@ const ExplorePage = (props) => {
                             <>  
                                 <div className='my-10 mx-10 items-center align-middle flex flex-col'>
                                 <Link
-                                to={`/posts/${post._id}`}
+                                to={`/posts/${post.postId}`}
+                                post={{Post}}
                                 >
                                     <img 
                                         className='h-64 w-64 object-cover  shadow-xl shadow-zinc-900 hover:scale-105 hover:rounded-lg hover:shadow-2xl hover:shadow-zinc-900 duration-300' 

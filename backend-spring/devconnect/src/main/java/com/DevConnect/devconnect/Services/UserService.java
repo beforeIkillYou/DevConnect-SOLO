@@ -113,4 +113,7 @@ public class UserService {
         }
         return stories;
     }
+    public Iterable<UserModel> getSimilarUsernameUsers(String username) {
+        return userRepository.findByUsernameContaining(username);
+    }
 }
