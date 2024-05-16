@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar';
 const ProfilePage = (props) => {
     const username = useParams();
     const [CurrUser, setCurrUser] = useState();
+    const [followers, setFollowers] = useState([]);
     const User = props?.User;
 
     //fullfilling the choice...following, unfollowing, editing the user
@@ -45,14 +46,21 @@ const ProfilePage = (props) => {
     //getting the profile of user from username
     const getCurrentUser = async() =>{
 
-        await axios.post(
-            '/api/v1/users/get-user-by-username',
-            {username:username.username}
+        await axios.get(
+            `http://localhost:8080/users/${username.username}`,
         )
         .then((res)=>{
-            setCurrUser(res.data.data);
+            setCurrUser(res.data);
         })
         .catch((err) => {
+            console.log(err);
+        })
+
+        await axios.get(`localhost:8080/users/${CurrUser?.id}/followers`)
+        .then((res)=>{
+            setFollowers(res.data);
+        })
+        .catch((err)=>{
             console.log(err);
         })
     }
@@ -61,10 +69,10 @@ const ProfilePage = (props) => {
     },[])
 
     //todo: make it "Edit" instead of the empty string
-    const choice = (CurrUser?._id === User?._id)?"":(User?.following.includes(CurrUser?._id))?"Unfollow":"Follow";
+    const choice = (CurrUser?.id === User?.id)?"":(User?.following.includes(CurrUser))?"Unfollow":"Follow";
     ///you can either edit your details or follow a given user or unfollwo a given user
 
-    // console.log(CurrUser);
+    console.log(CurrUser);
     if(CurrUser){
         return (
             <>  
@@ -88,11 +96,11 @@ const ProfilePage = (props) => {
 
                         {/* followers and follwing */}
                         <div className='ml-[28vw] font-mono text-lg'>
-                            <div>Followers: {CurrUser.followers.length}</div>
-                            <div>Following: {CurrUser.following.length}</div>
-                            <div>Posts: {CurrUser.posts.length}</div>
-                            <div>Comments: {CurrUser.comments.length}</div>
-                            <div>Liked Posts: {CurrUser.likedPosts.length}</div>
+                            <div>Followers: {followers?.length}</div>
+                            <div>Following: {CurrUser.following?.length}</div>
+                            {/* <div>Posts: {CurrUser.posts?.length}</div> */}
+                            {/* <div>Comments: {CurrUser.comments?.length}</div> */}
+                            {/* <div>Liked Posts: {CurrUser.likedPosts?.length}</div> */}
                         </div>
 
                         {/* follow, unfollow or edit button */}

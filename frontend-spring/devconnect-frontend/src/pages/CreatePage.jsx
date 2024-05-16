@@ -11,32 +11,78 @@ const CreatePage = (props) => {
     const Err = props.Err;
     const [title, settitle] = useState("");
     const [description, setdescription] = useState("");
+    
     const [media, setmedia] = useState(null);
+    let mediaUrl = "https://i.pinimg.com/236x/92/6d/e4/926de49fada55e29b0401ec3e705a450.jpg"
+    const uploadImage = async(e) => {
+        e.preventDefault();
+  
+        try{
+          if(media){
+            const image = new FormData();
+            image.append('file', media);
+            image.append('upload_preset', 'devconnect');
+            
+            const response = await fetch(
+              "https://api.cloudinary.com/v1_1/ddefovwve/image/upload",
+              {
+                method: 'post',
+                body: image
+              },
+            )
+            const imgData = await response.json();
+            // setmediaURL(imgData.url.toString());
+            mediaUrl = imgData.url.toString();
+            console.log("image upload succedcfully");
+  
+            // console.log(response);
+            // console.log(imgData.url.toString())
+            console.log(mediaUrl)
+            // console.log(imgData);
+          }
+  
+        }catch(err){
+          console.log(err,"media image upload failed ");
+        }
+      }
+  
 
-    if(Err){//if there is error in getting the current user then go to login
-        return <Navigate to={'/login'} />
-    }
-
-    //funciton to create post
+     //funciton to create post
     async function createPost(ev){
         ev.preventDefault();
 
+        try{
+            // console.log(Avatar)
+            await uploadImage(ev);
+        }catch(e) {
+            console.log(e);
+            alert("Image upload failed!!")
+        }
+
         const formData = new FormData();
+        formData.append('media', mediaUrl);
         formData.append('title', title);
         formData.append('description', description);
-        formData.append('media', media);
+        formData.append('ownerId',User.id)
+        const data = Object.fromEntries(formData);
+        console.log(data);
 
         await axios.post(
-            "/api/v1/posts/create-post",
-            formData
+            "http://localhost:8080/posts/create-post",
+            data
         )
         .then((res)=>{
-             alert("Post Created Successfully!",res.data.message);
+            console.log(res.data)
+            alert("Post Created Successfully!",res.data.message);
         })
         .catch((err)=>{
             alert("Post was not created")
             console.log("Cant create the post",err);
          })
+    }
+
+    if(Err){//if there is error in getting the current user then go to login
+        return <Navigate to={'/login'} />
     }
 
     return (

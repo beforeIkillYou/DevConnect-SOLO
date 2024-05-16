@@ -16,9 +16,9 @@ const NotificationsPage = (props) => {
     }
     
     const getAllCommentsofCurrentUser= async()=>{
-        await axios.get('/api/v1/comments/get-comments-of-current-user')
+        await axios.get(`http://localhost:8080/comments/get-comment-of-user/${User?.id}`)
         .then((res) => {
-            setcomments(res.data.data.comments);
+            setcomments(res.data);
         })
         .catch((err)=>{
             console.log(err);
@@ -39,16 +39,16 @@ const NotificationsPage = (props) => {
                         return (
                             <div id='commentNotifcation' className=' h-1/4 w-3/4 my-8 bg-zinc-900 flex flex-row justify-around items-center hover:-translate-y-2 hover:rounded-xl duration-300'>
                                 <div className='w-2/6'>
-                                    <img src={comment?.post?.media} className='h-28 w-28 rounded-xl object-cover mx-4 mr-10'/>
+                                    <img src={comment?.owner?.avatar} className='h-28 w-28 rounded-xl object-cover mx-4 mr-10'/>
                                 </div>
 
                                 <div className='w-3/6'>
                                 {comment?.text}
                                 </div>
 
-                                <div className='text-bold font-semibold w-1/6  text-center'>
+                                {/* <div className='text-bold font-semibold w-1/6  text-center'>
                                     Likes: {comment?.likes?.length}
-                                </div>
+                                </div> */}
                             </div>
                         )
                     })

@@ -67,7 +67,7 @@ const SearchPage = (props) => {
                     {searchedUsers}
                 </div>
 
-                <img src="https://i.pinimg.com/originals/c1/d1/c2/c1d1c21b450107359631600f72e0bd4a.gif" className='w-auto h-auto items-center my-20 mx-[26vw] bg-blend-multiply'></img>
+                <img src="https://i.pinimg.com/originals/67/44/8a/67448a616be5f3a983140458289bfa14.gif" className=' items-center mx-[26vw] scale-75 bg-blend-multiply'></img>
             </div>
         </>
     );
