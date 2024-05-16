@@ -28,11 +28,12 @@ public class CommentService {
         return commentRepository.findById(id).get();
     }
 
-    public CommentModel addComment(CommentDTO commentDTO) {
+    public CommentModel addCommentFromCommentDTO(CommentDTO commentDTO) {
         UserModel user = userRepository.findById(commentDTO.getUserId()).get();
         PostModel post = postRepository.findById(commentDTO.getPostId()).get();
-        
-        CommentModel comment = new CommentModel();
+        System.out.println(user.getName());
+        System.out.println(post.getTitle());
+        CommentModel comment = new CommentModel(commentDTO.getText(), user, post);
         comment.setText(commentDTO.getText());
         comment.setOwner(user);
         comment.setPost(post);

@@ -5,51 +5,61 @@ import { FILLED_HEART,EMPTY_HEART, DUSTBIN } from '../Constants';
 
 
 const Post = (props) => {
-    const postId = props.postId;
-    const [Post, setPost] = useState("");
+    // const postId = props.postId;
+    // const [Post, setPost] = useState("");
     const [commentText, setcommentText] = useState("");
     const [viewComments, setViewComments] = useState("");
     const commentBox = useRef(null);
 
     const User = props?.User;
+    const Post = props.postData; 
+    const postId = Post.postId;
 
-    //-1. resolving some eror in brute froce way
-    if(postId === "65eed2bb83389fcc0d6159be"){
-        return(<></>)
-    }
-    //0. getting the post's data from id
-    const getPost = async(localpostId) => {
-        try {
-            await axios
-            .post(`/api/v1/posts/view-post?_id=${localpostId}`)
-            .then((res) => {
-                setPost(res.data.data);
-            })
-            .catch((err) => {
-                console.log("Unable to retrieve post", err);
-            })
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    // //-1. resolving some eror in brute froce way
+    // if(postId === "65eed2bb83389fcc0d6159be"){
+    //     return(<></>)
+    // }
+    // //0. getting the post's data from id
+    // const getPost = async(localpostId) => {
+    //     try {
+    //         await axios
+    //         .post(`/api/v1/posts/view-post?_id=${localpostId}`)
+    //         .then((res) => {
+    //             setPost(res.data.data);
+    //         })
+    //         .catch((err) => {
+    //             console.log("Unable to retrieve post", err);
+    //         })
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
 
     //1. handling likes and comments
     const handleLike = async() => {
             await axios
-            .post(`/api/v1/posts/like-post?_id=${postId}`)
+            .post(`http://localhost:8080/posts/like-post/${postId}`)
             .then((res)=>{
                 window.location.reload();
             })
             // .catch((err) => {console.log(err);})
     }
+
     const handleComment = async(ev) => {  
         ev.preventDefault();
         
         // console.log(`/api/v1/comments/add-comment?_id=${postId}`);
         try{
             await axios
-            .post(`/api/v1/comments/add-comment?_id=${postId}`,{text:commentText})
+            .post(`http://localhost:8080/comments/add-comment`,
+                {
+                    "text": commentText,
+                    "userId": User.id,
+                    "postId": postId
+                }
+            )
             .then((res)=>{
+                console.log(res.data);
                 window.location.reload()
             })
             .catch((err)=>{console.log(err);})
@@ -98,7 +108,7 @@ const Post = (props) => {
     }
     const deletePost = async() => {
         await axios
-        .delete(`/api/v1/posts/delete-post?_id=${postId}`)
+        .delete(`http://localhost:8080/posts/delete-post/${postId}`)
         .then((res)=>{
             alert("Post deleted successfully!")
             window.location.reload();
@@ -115,11 +125,8 @@ const Post = (props) => {
     const deletePostFeature = (User?.posts?.includes(postId))?<div className='w-8 h-8 hover:cursor-pointer' onClick={deletePost}> 
                                                                     {bin}
                                                                 </div>:"";
-    useEffect(() => {
-        getPost(postId);
-    }, []); 
-    // console.log(Post.comments)
-    if(Post)
+    // console.log(User.id)
+    if(Post){
     return (
     <div className='w-1/2 h-auto min-h-[30rem] overflow-y-visible bg-zinc-900 shadow-xl shadow-black-950 rounded-lg mb-28'>
         
@@ -190,7 +197,7 @@ const Post = (props) => {
         {/* comments */}
         {viewComments}
     </div>
-    );
+    );}
     else
         return(<></>)
 }

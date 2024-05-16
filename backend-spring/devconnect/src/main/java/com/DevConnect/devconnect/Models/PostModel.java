@@ -38,9 +38,11 @@ public class PostModel {
     @ManyToOne
     private UserModel owner;
 
+    // @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<CommentModel> comments;
 
+    
     @ManyToMany
     private List<UserModel> likedUsers;
 
@@ -53,6 +55,10 @@ public class PostModel {
         this.title = title;
         this.description = description;
         this.owner = owner;
+    }
+
+    public long getPostId() {
+        return postId;
     }
 
     public String getMedia() {
@@ -101,5 +107,9 @@ public class PostModel {
 
     public void setOwner(UserModel owner) {
         this.owner = owner;
+    }
+
+    public List<CommentModel> getComments() {
+        return comments;
     }
 }

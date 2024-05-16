@@ -18,20 +18,20 @@ const IndexPage = (props) => {
     const [Posts, setPosts] = useState([]); 
 
     //1.getting current homepage data
-    // const getHomeData = async()=>{
-    //     await axios.get('/api/v1/users/homepage')
-    //     .then((res)=>{
-    //         setStories(res.data.data.stories);
-    //         setPosts(res.data.data.posts);
-    //     })
-    //     .catch((err)=>{
-    //         setErr(err);//if there is error in fethcing home data then go to login
-    //     });
-    // }
-    // useEffect(() =>{
-    //     getHomeData();
-    // },[]);
+    const getHomeData = async()=>{
+        await axios.get('http://localhost:8080/posts/get-all-posts')
+        .then((res)=>{
+            setPosts(res.data);
+        })
+        .catch((err)=>{
+            setErr(err);//if there is error in fethcing home data then go to login
+        });
+    }
+    useEffect(() =>{
+        getHomeData();
+    },[]);
 
+    // TODO: handle stroy changes in backend and change frontend accoridngly
     //2. handle story change
     const removeStory = async()=>{
         await axios.delete('/api/v1/users/remove-story')
@@ -96,8 +96,8 @@ const IndexPage = (props) => {
     }
 
 
-    // console.log(Posts);{
-        console.log(localStorage.getItem('user'))
+    // console.log(Posts);
+    // console.log(JSON.parse(localStorage.getItem('user')) )
     return (
         <>  
             <Navbar User={User}/>
@@ -119,7 +119,7 @@ const IndexPage = (props) => {
 
                     {/* all stories here */}
                     {
-                        Stories.map((story)=>{
+                        Stories?.map((story)=>{
                             return(
                                 <Story avatar={story?.avatar} story={story?.story} username={story?.username}/>
                             )
@@ -130,9 +130,9 @@ const IndexPage = (props) => {
                 {/* posts here  */}
                 <div className='flex flex-col justify-center items-center ' id='posts'>
                     {
-                        Posts.map((postId)=>{
+                        Posts.map((postData)=>{
                             return(
-                                <Post postId={postId} User={User}/>
+                                <Post User={User} postData={postData}/>
                             )
                         })
                     }

@@ -1,6 +1,8 @@
 package com.DevConnect.devconnect.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,18 +12,20 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "commentss")
 public class CommentModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long commentId;
 
     @Column(nullable = false)
     private String text;
 
+    // @JsonIgnore
     @ManyToOne
     private UserModel owner;
 
+    @JsonIgnore
     @ManyToOne
     private PostModel post;
 
@@ -30,6 +34,12 @@ public class CommentModel {
 
     CommentModel(String text) {
         this.text = text;
+    }
+
+    public CommentModel(String text, UserModel owner, PostModel post) {
+        this.text = text;
+        this.owner = owner;
+        this.post = post;
     }
 
     public String getText() {

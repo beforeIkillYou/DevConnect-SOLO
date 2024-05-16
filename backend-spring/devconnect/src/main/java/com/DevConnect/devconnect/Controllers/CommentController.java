@@ -36,9 +36,10 @@ public class CommentController {
     public  ResponseEntity<APIReturnModel>  addComment(@RequestBody CommentDTO newComment){
         apiReturnModel = new APIReturnModel();
         comments = new Vector<>();
+        System.out.println(newComment.getPostId());
 
         try{
-            CommentModel comment = this.commentService.addComment(newComment);
+            CommentModel comment = this.commentService.addCommentFromCommentDTO(newComment);
             comments.add(comment);
 
             apiReturnModel.setData(comments);
@@ -67,5 +68,4 @@ public class CommentController {
     public Iterable<CommentModel> getCommentOfUser(@PathVariable("userId") Long userId) {
         return this.commentService.getCommentOfUser(userId);
     }
-    
 }

@@ -82,4 +82,5 @@ public class PostController {
     public Iterable<PostModel> getPostsOfUser(@PathVariable("userId") Long userId){
         return postService.getPostsOfUser(userId);
     }
+
 }   

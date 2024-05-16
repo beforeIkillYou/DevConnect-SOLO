@@ -62,7 +62,8 @@ public class UserModel implements UserDetails{
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<CommentModel> comments;
-
+    
+    @JsonIgnore
     @ManyToMany(mappedBy = "likedUsers")
     private List<PostModel> likedPosts;
 
@@ -85,6 +86,10 @@ public class UserModel implements UserDetails{
         this.bio = bio;
         this.avatar = avatar;
         this.role = role;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     public String getUsername(){
