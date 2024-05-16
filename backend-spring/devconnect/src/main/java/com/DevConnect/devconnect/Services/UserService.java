@@ -1,11 +1,15 @@
 package com.DevConnect.devconnect.Services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 // import com.DevConnect.devconnect.Models.Role;
 import com.DevConnect.devconnect.Models.UserModel;
 import com.DevConnect.devconnect.Repositories.UserRepository;
+import com.DevConnect.devconnect.Utils.StoryDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -78,5 +82,35 @@ public class UserService {
     public Iterable<UserModel> getFollowing(long userId) {
         UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return user.getFollowing();
+    }
+
+    public UserModel deleteStory(Long userId){
+        UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setStory(null);
+        return userRepository.save(user);
+    }
+
+    public UserModel setStory(Long userId, String story){
+        UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setStory(story);
+        return userRepository.save(user);
+    }
+
+    public Iterable<StoryDTO> getStories(long userId){
+        //this function takes the current user id and returns a list of strings ....which are "story" urls of the current user and of the users the current user is following
+        UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        List<StoryDTO> stories = new ArrayList<>();
+        if(user.getStory() != null){
+            StoryDTO storyDTO = new StoryDTO(user.getAvatar(),user.getStory(),user.getUsername());
+            stories.add(storyDTO);
+        }
+
+        for(UserModel followee : user.getFollowing()){
+            if(user.getStory() != null){
+                StoryDTO storyDTO = new StoryDTO(followee.getAvatar(), followee.getStory(), followee.getUsername());
+                stories.add(storyDTO);
+            }   
+        }
+        return stories;
     }
 }

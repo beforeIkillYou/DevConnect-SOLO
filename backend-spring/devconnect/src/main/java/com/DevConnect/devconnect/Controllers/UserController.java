@@ -5,11 +5,13 @@ import java.util.Vector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.DevConnect.devconnect.Models.UserModel;
 import com.DevConnect.devconnect.Services.UserService;
 import com.DevConnect.devconnect.Utils.APIReturnModel;
+import com.DevConnect.devconnect.Utils.StoryDTO;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -126,9 +128,26 @@ public class UserController {
         return userService.getFollowing(userId);
     }
 
-    // TODO return homepage
-    @GetMapping("/homepage")
-    public UserModel getHomePage() {
-        return userService.findByUsername("homepage");
+    @DeleteMapping("/delete-story/{userId}")
+    public UserModel deleteStory(@PathVariable("userId") Long userId){
+        // check if the given id user is having not null story...if yes then make it null(delete it)....if already null then state that
+        return this.userService.deleteStory(userId);
     }
+
+    @PostMapping("/set-story")
+    public UserModel setStory(@RequestParam("storyUrl") String storyUrl, @RequestParam("userId") Long userId) {
+        System.out.println(storyUrl);
+        return this.userService.setStory(userId, storyUrl);
+    }
+    
+    @GetMapping("/get-stories/{userId}")
+    public Iterable<StoryDTO> getStroiesOfUserAndFollowing(@PathVariable("userId") Long userId) { //gets and returns stories of all the users and the following
+        return this.userService.getStories(userId);
+    }
+    
+
+    // @GetMapping("/homepage")
+    // public UserModel getHomePage() {
+    //     return userService.findByUsername("homepage");
+    // }
 }

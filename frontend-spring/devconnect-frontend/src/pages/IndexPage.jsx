@@ -9,8 +9,11 @@ import Post from '../components/Post';
 
 
 const IndexPage = (props) => {
+    // const [User,setUser] = useState(props.User);
     const User = props.User;
+
     let Newstory = null;
+    let Newstoryurl = "https://i.pinimg.com/736x/84/ab/aa/84abaabe6fff7dda10c6a1ffee2a397a.jpg"
 
     const [Err, setErr] = useState(null);
     const [Stories  , setStories] = useState([]);
@@ -26,38 +29,85 @@ const IndexPage = (props) => {
         .catch((err)=>{
             setErr(err);//if there is error in fethcing home data then go to login
         });
+
+        if(User){
+            await axios.get(`http://localhost:8080/users/get-stories/${User?.id}`)
+            .then((res)=>{
+                setStories(res.data);
+            })
+            .catch((err)=>{
+                setErr(err);//if there is error in fethcing home data then go to login
+            });
+        }
     }
     useEffect(() =>{
         getHomeData();
     },[]);
 
-    // TODO: handle stroy changes in backend and change frontend accoridngly
     //2. handle story change
     const removeStory = async()=>{
-        await axios.delete('/api/v1/users/remove-story')
-        .then((res)=>{})
+        await axios.delete(`http://localhost:8080/users/delete-story/${User?.id}`)
+        .then((res)=>{
+            // alert(res.data.username)
+            // console.log(res.data)
+            localStorage.setItem('user', JSON.stringify(res.data));
+            console.log('User data stored with deleted story in localStorage');
+            // setUser(res.data);   
+
+
+            window.location.reload();
+        })
         .catch((err)=>{
             console.log('Cant remove the given story, ',err)
         })
     }
+
     const addStory = async(ev)=>{
         ev.preventDefault();
         
-        // console.log(Newstory)
-        const formData = new FormData();
-        formData.append('story',Newstory);
+        try{
+            if(Newstory){
+                const image = new FormData();
+                image.append('file', Newstory);
+                image.append('upload_preset', 'devconnect');
+
+                const response = await fetch(
+                    "https://api.cloudinary.com/v1_1/ddefovwve/image/upload",
+                    {
+                      method: 'post',
+                      body: image
+                    },
+                  )
+                const imgData = await response.json();
+
+                Newstoryurl = imgData.url.toString();
+                console.log("story upload succedcfully");
+                console.log(Newstoryurl.toString())
+            }
+        }catch(err){
+            console.log(err);
+            alert("Stroy upload failed!!")
+        }
 
         try{
+            console.log(User.id)
             await axios.post(
-                '/api/v1/users/add-story',
-                formData
+                `http://localhost:8080/users/set-story?storyUrl=${Newstoryurl}&userId=${User?.id}`,
             )
-            .then((res) => {})
+            .then((res) => {
+                console.log(res.data)
+                localStorage.setItem('user', JSON.stringify(res.data));
+                console.log('User data stored with new story in localStorage');
+                Newstory = null;
+                //  setUser(res.data);
+
+
+                window.location.reload();
+            })
             .catch((err)=>{
                 console.log("Cant add the given story",err);
             })
-            Newstory=null; //after adding the newStory the varabile becomes null again
-            window.location.reload();
+
         }catch(err){
             //dont need to do anything here maybe
         }
@@ -71,9 +121,9 @@ const IndexPage = (props) => {
         if(User?.story){
             setChangestoryform(
                 <div>
-                    <form onSubmit={removeStory}>
-                        <button type='submit' className='bg-red-500 saturate-50 hover:bg-red-700 text-white py-1 px-2 border border-red-500 hover:border-red-700 hover:saturate-200 rounded absolute top-[6rem] left-[18.5rem]'>Remove Story</button>
-                    </form>
+                    <div >
+                        <button onClick={removeStory} className='bg-red-500 saturate-50 hover:bg-red-700 text-white py-1 px-2 border border-red-500 hover:border-red-700 hover:saturate-200 rounded absolute top-[6rem] left-[18.5rem]'>Remove Story</button>
+                    </div>
                 </div>
             );
         }else{
@@ -95,9 +145,10 @@ const IndexPage = (props) => {
         return <Navigate to={'/login'} />
     }
 
-
-    // console.log(Posts);
+    
+    // console.log(User?.story);
     // console.log(JSON.parse(localStorage.getItem('user')) )
+    // console.log(Stories)
     return (
         <>  
             <Navbar User={User}/>

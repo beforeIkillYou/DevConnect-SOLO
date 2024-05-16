@@ -36,7 +36,7 @@ const Register = () => {
           console.log("image upload succedcfully");
 
           // console.log(response);
-          console.log(imgData.url.toString())
+          // console.log(imgData.url.toString())
           console.log(AvatarURL)
           // console.log(imgData);
         }

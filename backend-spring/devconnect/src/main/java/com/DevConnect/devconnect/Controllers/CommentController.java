@@ -67,5 +67,5 @@ public class CommentController {
     @GetMapping("/get-comment-of-user/{userId}")
     public Iterable<CommentModel> getCommentOfUser(@PathVariable("userId") Long userId) {
         return this.commentService.getCommentOfUser(userId);
-    }
+    } 
 }
