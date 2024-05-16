@@ -125,4 +125,10 @@ public class UserController {
     public Iterable<UserModel> getFollowing(@PathVariable long userId) {
         return userService.getFollowing(userId);
     }
+
+    // TODO return homepage
+    @GetMapping("/homepage")
+    public UserModel getHomePage() {
+        return userService.findByUsername("homepage");
+    }
 }

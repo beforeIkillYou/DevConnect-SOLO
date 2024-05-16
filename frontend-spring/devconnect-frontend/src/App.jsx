@@ -1,0 +1,56 @@
+import {Route, Routes} from 'react-router-dom'
+import axios from 'axios'
+import './App.css'
+
+//importing pages
+import IndexPage from './pages/IndexPage'
+import CreatePage from './pages/CreatePage'
+import ProfilePage from './pages/ProfilePage'
+import ExplorePage from './pages/ExplorePage'
+import NotificationsPage from './pages/NotificationsPage'
+import SearchPage from './pages/SearchPage'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Layout from './components/Layout' 
+import Post from './components/Post'
+import { useState, useEffect } from 'react'
+import PostPage from './pages/PostPage'
+
+function App() {
+  const [User, setUser] = useState(null);
+  const [Err, setErr] = useState(null);
+
+  //1. if the user is already logged in then get him
+  const getCurrentUser = () =>{
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }else{
+      setUser(null);
+    }
+  }
+  useEffect(() =>{
+      getCurrentUser();
+  },[])
+
+  return(
+    <Routes>
+      <Route path='/' element={<Layout/>}>
+        <Route index element={<IndexPage User={User}/>} />
+
+        <Route path='/login' element={<Login/>} />
+        <Route path='/register' element={<Register/> } />
+
+        <Route path='/create' element={<CreatePage User={User} Err={Err}/>}/>
+        <Route path='/explore' element={<ExplorePage User={User} Err={Err}/>}/>
+        <Route path='/notifications' element={<NotificationsPage User={User} Err={Err}/>}/>
+        <Route path='/search' element={<SearchPage User={User} Err={Err}/>}/>
+
+        <Route path='/profile/:username' element={<ProfilePage User={User}/>} />
+        <Route path='/posts/:postId'  element={<PostPage User={User}/>} />
+      </Route>
+    </Routes>
+  )
+}
+
+export default App
