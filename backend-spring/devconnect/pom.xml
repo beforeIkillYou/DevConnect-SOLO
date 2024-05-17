@@ -14,7 +14,7 @@
 	<name>devconnect</name>
 	<description>WDA project for connecting developers.</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
